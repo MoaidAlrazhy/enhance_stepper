@@ -207,20 +207,9 @@ class EnhanceStepper extends StatefulWidget {
     this.onStepContinue,
     this.onStepCancel,
     this.controlsBuilder,
-    this.elevation,
-    this.padding,
-    this.backgroundColor,
-  })  : assert(0 <= currentStep && currentStep < steps.length),
+  })
+      : assert(0 <= currentStep && currentStep < steps.length),
         super(key: key);
-
-  // Background color of stepper
-  final Color? backgroundColor;
-
-  // Padding of stepper content
-  final EdgeInsets? padding;
-
-  // The elevation of stepper
-  final double? elevation;
 
   /// The steps of the stepper whose titles, subtitles, icons always get shown.
   ///
@@ -334,7 +323,7 @@ class _EnhanceStepperState extends State<EnhanceStepper>
     super.initState();
     _keys = List<GlobalKey>.generate(
       widget.steps.length,
-      (int i) => GlobalKey(),
+          (int i) => GlobalKey(),
     );
 
     for (int i = 0; i < widget.steps.length; i += 1)
@@ -363,7 +352,9 @@ class _EnhanceStepperState extends State<EnhanceStepper>
   }
 
   bool _isDark() {
-    return Theme.of(context).brightness == Brightness.dark;
+    return Theme
+        .of(context)
+        .brightness == Brightness.dark;
   }
 
   Widget _buildLine(bool visible) {
@@ -376,7 +367,7 @@ class _EnhanceStepperState extends State<EnhanceStepper>
 
   Widget _buildicon(int index, bool oldState) {
     final StepState state =
-        oldState ? _oldStates[index]! : widget.steps[index].state;
+    oldState ? _oldStates[index]! : widget.steps[index].state;
     final bool isDarkActive = _isDark() && widget.steps[index].isActive;
 
     if (widget.steps[index].icon != null && state != StepState.error) {
@@ -410,7 +401,9 @@ class _EnhanceStepperState extends State<EnhanceStepper>
   }
 
   Color _circleColor(int index) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final ColorScheme colorScheme = Theme
+        .of(context)
+        .colorScheme;
     if (!_isDark()) {
       return widget.steps[index].isActive
           ? colorScheme.primary
@@ -503,7 +496,9 @@ class _EnhanceStepperState extends State<EnhanceStepper>
       );
 
     final Color cancelColor;
-    switch (Theme.of(context).brightness) {
+    switch (Theme
+        .of(context)
+        .brightness) {
       case Brightness.light:
         cancelColor = Colors.black54;
         break;
@@ -515,7 +510,7 @@ class _EnhanceStepperState extends State<EnhanceStepper>
     final ThemeData themeData = Theme.of(context);
     final ColorScheme colorScheme = themeData.colorScheme;
     final MaterialLocalizations localizations =
-        MaterialLocalizations.of(context);
+    MaterialLocalizations.of(context);
 
     const OutlinedBorder buttonShape = RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(2)));
@@ -534,19 +529,19 @@ class _EnhanceStepperState extends State<EnhanceStepper>
               onPressed: widget.onStepContinue,
               style: ButtonStyle(
                 foregroundColor: MaterialStateProperty.resolveWith<Color?>(
-                    (Set<MaterialState> states) {
-                  return states.contains(MaterialState.disabled)
-                      ? null
-                      : (_isDark()
+                        (Set<MaterialState> states) {
+                      return states.contains(MaterialState.disabled)
+                          ? null
+                          : (_isDark()
                           ? colorScheme.onSurface
                           : colorScheme.onPrimary);
-                }),
+                    }),
                 backgroundColor: MaterialStateProperty.resolveWith<Color?>(
-                    (Set<MaterialState> states) {
-                  return _isDark() || states.contains(MaterialState.disabled)
-                      ? null
-                      : colorScheme.primary;
-                }),
+                        (Set<MaterialState> states) {
+                      return _isDark() || states.contains(MaterialState.disabled)
+                          ? null
+                          : colorScheme.primary;
+                    }),
                 padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
                     buttonPadding),
                 shape: MaterialStateProperty.all<OutlinedBorder>(buttonShape),
@@ -579,7 +574,7 @@ class _EnhanceStepperState extends State<EnhanceStepper>
       case StepState.indexed:
       case StepState.editing:
       case StepState.complete:
-        // case StepState.customIcon:
+      // case StepState.customIcon:
         return textTheme.bodyText1!;
       case StepState.disabled:
         return textTheme.bodyText1!.copyWith(
@@ -600,7 +595,7 @@ class _EnhanceStepperState extends State<EnhanceStepper>
       case StepState.indexed:
       case StepState.editing:
       case StepState.complete:
-        // case StepState.customIcon:
+      // case StepState.customIcon:
         return textTheme.caption!;
       case StepState.disabled:
         return textTheme.caption!.copyWith(
@@ -616,7 +611,7 @@ class _EnhanceStepperState extends State<EnhanceStepper>
   Widget _buildHeaderText(int index) {
     return Column(
       crossAxisAlignment: widget.type == StepperType.horizontal &&
-              widget.horizontalTitlePosition == HorizontalTitlePosition.bottom
+          widget.horizontalTitlePosition == HorizontalTitlePosition.bottom
           ? CrossAxisAlignment.center
           : CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -713,35 +708,35 @@ class _EnhanceStepperState extends State<EnhanceStepper>
   }
 
   Widget _buildVertical() {
-    return ListView(
-      shrinkWrap: true,
-      physics: widget.physics,
-      children: <Widget>[
-        for (int i = 0; i < widget.steps.length; i += 1)
-          Column(
+    return ListView.builder(
+        shrinkWrap: true,
+        itemCount: widget.steps.length,
+        itemBuilder: (BuildContext context, int i) {
+          i < _keys.length ? _keys[i] : _keys.add(GlobalKey());
+          return Column(
             key: _keys[i],
             children: <Widget>[
               InkWell(
                 onTap: widget.steps[i].state != StepState.disabled
                     ? () {
-                        // In the vertical case we need to scroll to the newly tapped
-                        // step.
-                        Scrollable.ensureVisible(
-                          _keys[i].currentContext!,
-                          curve: Curves.fastOutSlowIn,
-                          duration: kThemeAnimationDuration,
-                        );
+                  // In the vertical case we need to scroll to the newly tapped
+                  // step.
+                  Scrollable.ensureVisible(
+                    _keys[i].currentContext!,
+                    curve: Curves.fastOutSlowIn,
+                    duration: kThemeAnimationDuration,
+                  );
 
-                        widget.onStepTapped?.call(i);
-                      }
+                  widget.onStepTapped?.call(i);
+                }
                     : null,
                 canRequestFocus: widget.steps[i].state != StepState.disabled,
                 child: _buildVerticalHeader(i),
               ),
               _buildVerticalBody(i),
             ],
-          ),
-      ],
+          );
+        }
     );
   }
 
@@ -770,28 +765,28 @@ class _EnhanceStepperState extends State<EnhanceStepper>
         InkResponse(
           onTap: widget.steps[i].state != StepState.disabled
               ? () {
-                  widget.onStepTapped?.call(i);
-                }
+            widget.onStepTapped?.call(i);
+          }
               : null,
           canRequestFocus: widget.steps[i].state != StepState.disabled,
           child: widget.type == StepperType.horizontal &&
-                  widget.horizontalTitlePosition ==
-                      HorizontalTitlePosition.bottom
+              widget.horizontalTitlePosition ==
+                  HorizontalTitlePosition.bottom
               ? _buildHorizontalBottomTitle(i)
               : Row(
-                  children: <Widget>[
-                    SizedBox(
-                      height: 72.0,
-                      child: Center(
-                        child: _buildIcon(i),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsetsDirectional.only(start: 12.0),
-                      child: _buildHeaderText(i),
-                    ),
-                  ],
+            children: <Widget>[
+              SizedBox(
+                height: 72.0,
+                child: Center(
+                  child: _buildIcon(i),
                 ),
+              ),
+              Container(
+                margin: const EdgeInsetsDirectional.only(start: 12.0),
+                child: _buildHeaderText(i),
+              ),
+            ],
+          ),
         ),
         if (!_isLast(i))
           Expanded(
@@ -818,8 +813,7 @@ class _EnhanceStepperState extends State<EnhanceStepper>
     return Column(
       children: <Widget>[
         Material(
-          color: widget.backgroundColor ?? Colors.white,
-          elevation: widget.elevation ?? 2.0,
+          elevation: 2.0,
           child: Container(
             margin: const EdgeInsets.symmetric(horizontal: 24.0),
             child: Row(
@@ -830,7 +824,7 @@ class _EnhanceStepperState extends State<EnhanceStepper>
         Expanded(
           child: ListView(
             physics: widget.physics,
-            padding: widget.padding ?? const EdgeInsets.all(24.0),
+            padding: const EdgeInsets.all(24.0),
             children: <Widget>[
               AnimatedSize(
                 curve: Curves.fastOutSlowIn,
@@ -853,9 +847,9 @@ class _EnhanceStepperState extends State<EnhanceStepper>
       if (context.findAncestorWidgetOfExactType<Stepper>() != null)
         throw FlutterError(
           'Steppers must not be nested.\n'
-          'The material specification advises that one should avoid embedding '
-          'steppers within steppers. '
-          'https://material.io/archive/guidelines/components/steppers.html#steppers-usage',
+              'The material specification advises that one should avoid embedding '
+              'steppers within steppers. '
+              'https://material.io/archive/guidelines/components/steppers.html#steppers-usage',
         );
       return true;
     }());
@@ -898,8 +892,10 @@ class _TrianglePainter extends CustomPainter {
     ];
 
     canvas.drawPath(
-      Path()..addPolygon(points, true),
-      Paint()..color = color,
+      Path()
+        ..addPolygon(points, true),
+      Paint()
+        ..color = color,
     );
   }
 }
