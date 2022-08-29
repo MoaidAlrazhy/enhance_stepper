@@ -208,8 +208,8 @@ class EnhanceStepper extends StatefulWidget {
     this.onStepCancel,
     this.controlsBuilder,
   })
-      : assert(0 <= currentStep && currentStep < steps.length),
-        super(key: key);
+      // : assert(0 <= currentStep && currentStep < steps.length),
+       : super(key: key);
 
   /// The steps of the stepper whose titles, subtitles, icons always get shown.
   ///
@@ -333,7 +333,7 @@ class _EnhanceStepperState extends State<EnhanceStepper>
   @override
   void didUpdateWidget(EnhanceStepper oldWidget) {
     super.didUpdateWidget(oldWidget);
-    assert(widget.steps.length == oldWidget.steps.length);
+    // assert(widget.steps.length == oldWidget.steps.length);
 
     for (int i = 0; i < oldWidget.steps.length; i += 1)
       _oldStates[i] = oldWidget.steps[i].state;
