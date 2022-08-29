@@ -367,7 +367,7 @@ class _EnhanceStepperState extends State<EnhanceStepper>
 
   Widget _buildicon(int index, bool oldState) {
     final StepState state =
-    oldState ? _oldStates[index]! : widget.steps[index].state;
+    oldState ? _oldStates[index] ?? widget.steps[index].state : widget.steps[index].state;
     final bool isDarkActive = _isDark() && widget.steps[index].isActive;
 
     if (widget.steps[index].icon != null && state != StepState.error) {
